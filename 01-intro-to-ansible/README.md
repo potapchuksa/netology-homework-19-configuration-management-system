@@ -74,7 +74,7 @@ docker exec ubuntu apt-get install -y python3
 7. При помощи `ansible-vault` зашифруйте факты в `group_vars/deb` и `group_vars/el` с паролем `netology`.
 
 ```bash
-nsible-vault encrypt group_vars/deb/examp.yml group_vars/el/examp.yml
+ansible-vault encrypt group_vars/deb/examp.yml group_vars/el/examp.yml
 ```
 
 ![](img/img-07-01.png)
