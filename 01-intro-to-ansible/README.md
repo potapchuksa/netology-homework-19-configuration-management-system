@@ -120,10 +120,106 @@ ansible-playbook -i inventory/prod.yml site.yml --ask-vault-pass
 ## Необязательная часть
 
 1. При помощи `ansible-vault` расшифруйте все зашифрованные файлы с переменными.
+
+```bash
+ansible-vault decrypt group_vars/deb/examp.yml group_vars/el/examp.yml
+```
+
+![](img/img-12-01.png)
+
 2. Зашифруйте отдельное значение `PaSSw0rd` для переменной `some_fact` паролем `netology`. Добавьте полученное значение в `group_vars/all/exmp.yml`.
+
+```bash
+ansible-vault encrypt_string
+```
+
+![](img/img-13-01.png)
+
+![](img/img-13-02.png)
+
 3. Запустите `playbook`, убедитесь, что для нужных хостов применился новый `fact`.
+
+```bash
+ansible-playbook -i inventory/prod.yml site.yml --ask-vault-pass
+```
+
+![](img/img-14-01.png)
+
 4. Добавьте новую группу хостов `fedora`, самостоятельно придумайте для неё переменную. В качестве образа можно использовать [этот вариант](https://hub.docker.com/r/pycontribs/fedora).
+
+```bash
+docker run -d --name fedora pycontribs/fedora sleep infinity
+```
+
+![](img/img-15-01.png)
+
+![](img/img-15-02.png)
+
+![](img/img-15-03.png)
+
+![](img/img-15-04.png)
+
 5. Напишите скрипт на bash: автоматизируйте поднятие необходимых контейнеров, запуск ansible-playbook и остановку контейнеров.
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Переходим в директорию, где лежит скрипт (чтобы запускать из любого места)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+INVENTORY="inventory/prod.yml"
+PLAYBOOK="site.yml"
+
+# Массив: имя_контейнера=образ
+declare -A IMAGES=(
+    [centos7]="centos:7"
+    [ubuntu]="ubuntu:22.04"
+    [fedora]="pycontribs/fedora"
+)
+
+# Функция гарантированной очистки (сработает даже при ошибке или Ctrl+C)
+cleanup() {
+    echo -e "\nОстанавливаем и удаляем контейнеры..."
+    for name in "${!IMAGES[@]}"; do
+        docker rm -f "$name" 2>/dev/null || true
+    done
+    echo "Контейнеры удалены."
+}
+
+# Регистрируем ловушку на любой выход из скрипта
+trap cleanup EXIT
+
+echo "Удаляем старые контейнеры (если остались)..."
+for name in "${!IMAGES[@]}"; do
+    docker rm -f "$name" 2>/dev/null || true
+done
+
+echo "Запускаем контейнеры..."
+for name in "${!IMAGES[@]}"; do
+    docker run -d --name "$name" "${IMAGES[$name]}" sleep infinity
+done
+
+# Небольшая пауза для инициализации Docker
+sleep 5
+
+# Ubuntu minimal не содержит Python, а он нужен Ansible
+echo " Устанавливаем Python в ubuntu..."
+docker exec ubuntu apt-get update -qq
+docker exec ubuntu apt-get install -y -qq python3 > /dev/null
+
+echo "Запускаем Ansible Playbook..."
+ansible-playbook -i "$INVENTORY" "$PLAYBOOK" --ask-vault-pass
+
+echo "Готово!"
+# cleanup() вызывается автоматически благодаря trap EXIT
+```
+
+![](img/img-16-01.png)
+
+![](img/img-16-02.png)
+
 6. Все изменения должны быть зафиксированы и отправлены в ваш личный репозиторий.
 
 ---
