@@ -1,0 +1,7 @@
+---
+vector_version: "0.40.0"
+vector_arch: "x86_64-unknown-linux-musl"
+vector_install_dir: "/usr/local/bin"
+vector_config_dir: "/etc/vector"
+vector_config_file: "{{ vector_config_dir }}/vector.yml"
+vector_download_url: "https://github.com/vectordotdev/vector/releases/download/v{{ vector_version }}/vector-{{ vector_version }}-{{ vector_arch }}.tar.gz"

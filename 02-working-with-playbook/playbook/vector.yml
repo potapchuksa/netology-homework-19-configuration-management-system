@@ -1,0 +1,69 @@
+- name: Install Vector
+  hosts: vector
+  become: true
+  vars_files:
+    - group_vars/vector/vars.yml
+
+  handlers:
+    - name: Restart vector
+      ansible.builtin.systemd:
+        name: vector
+        state: restarted
+
+  tasks:
+    - name: Download Vector archive
+      ansible.builtin.get_url:
+        url: "{{ vector_download_url }}"
+        dest: /tmp/vector.tar.gz
+        mode: '0644'
+      tags: [vector]
+
+    - name: Install Vector binary directly
+      ansible.builtin.unarchive:
+        src: /tmp/vector.tar.gz
+        dest: "{{ vector_install_dir }}"
+        remote_src: true
+        creates: "{{ vector_install_dir }}/vector"
+        extra_opts:
+          - "--strip-components=3"
+          - "--wildcards"
+          - "*/vector"
+        mode: '0755'
+      tags: [vector]
+
+    - name: Ensure vector config directory exists
+      ansible.builtin.file:
+        path: "{{ vector_config_dir }}"
+        state: directory
+        mode: '0755'
+      tags: [vector]
+
+    - name: Ensure Vector data directory exists
+      ansible.builtin.file:
+        path: /var/lib/vector
+        state: directory
+        mode: '0755'
+      tags: [vector]
+
+    - name: Deploy config
+      ansible.builtin.template:
+        src: vector.yml.j2
+        dest: "{{ vector_config_file }}"
+        mode: '0644'
+      notify: Restart vector
+      tags: [vector]
+
+    - name: Deploy systemd service file
+      ansible.builtin.template:
+        src: vector.service.j2
+        dest: /etc/systemd/system/vector.service
+        mode: '0644'
+      tags: [vector]
+
+    - name: Enable and start Vector service
+      ansible.builtin.systemd:
+        name: vector
+        enabled: true
+        state: started
+        daemon_reload: true
+      tags: [vector]
