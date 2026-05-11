@@ -1,0 +1,10 @@
+[Unit]
+Description=Vector Log Aggregator
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/vector --config /etc/vector/vector.yml
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

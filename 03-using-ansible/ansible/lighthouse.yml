@@ -1,0 +1,62 @@
+---
+- name: Install Lighthouse
+  hosts: lighthouse
+  become: true
+
+  tasks:
+    - name: Install nginx and git
+      ansible.builtin.yum:
+        name:
+          - nginx
+          - git
+        state: present
+      tags: [lighthouse]
+
+    - name: Clone/Update lighthouse source
+      ansible.builtin.git:
+        repo: "{{ lh_repo }}"
+        dest: "{{ lh_src_path }}"
+        version: master
+        update: true
+      register: git_result
+      tags: [lighthouse]
+
+    - name: Disable default_server in nginx.conf (IPv4)
+      ansible.builtin.replace:
+        path: /etc/nginx/nginx.conf
+        regexp: '^(\s*)listen\s+80\s+default_server;'
+        replace: '\1# listen 80 default_server;  # disabled by ansible'
+      notify: Reload nginx
+      tags: [lighthouse]
+
+    - name: Disable default_server in nginx.conf (IPv6)
+      ansible.builtin.replace:
+        path: /etc/nginx/nginx.conf
+        regexp: '^(\s*)listen\s+\[::\]:80\s+default_server;'
+        replace: '\1# listen [::]:80 default_server;  # disabled by ansible'
+      notify: Reload nginx
+      tags: [lighthouse]
+
+    - name: Deploy lighthouse nginx config
+      ansible.builtin.template:
+        src: nginx-lighthouse.conf.j2
+        dest: /etc/nginx/conf.d/lighthouse.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Reload nginx
+      tags: [lighthouse]
+
+    - name: Start and enable nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
+      tags: [lighthouse]
+
+  handlers:
+    - name: Reload nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+      tags: [lighthouse]

@@ -1,0 +1,4 @@
+---
+lh_repo: "https://github.com/VKCOM/lighthouse.git"
+lh_src_path: "/opt/lighthouse"
+nginx_port: 80

@@ -3,3 +3,5 @@
 ## [«Введение в Ansible»](01-intro-to-ansible/)
 
 ## [«Работа с Playbook»](02-working-with-playbook/)
+
+## [«Использование Ansible»](03-using-ansible/)

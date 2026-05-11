@@ -1,0 +1,16 @@
+---
+"clickhouse":
+  "hosts":
+    "clickhouse-01":
+      "ansible_host": "<Clickhouse-IP>"
+      "ansible_user": "almalinux"
+"lighthouse":
+  "hosts":
+    "lighthouse-01":
+      "ansible_host": "<Lighthouse-IP>"
+      "ansible_user": "almalinux"
+"vector":
+  "hosts":
+    "vector-01":
+      "ansible_host": "<Vector-IP>"
+      "ansible_user": "almalinux"
