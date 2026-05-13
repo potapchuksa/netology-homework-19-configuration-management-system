@@ -1,0 +1,7 @@
+---
+clickhouse_repo_key: "https://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key"
+clickhouse_repo_gpgcheck: false
+
+clickhouse_repo_deb: "deb https://packages.clickhouse.com/deb stable main"
+clickhouse_repo_key_deb: "8919F6BD2B48D754"
+clickhouse_apt_install_recommends: false

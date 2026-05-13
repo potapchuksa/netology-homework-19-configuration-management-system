@@ -1,0 +1,27 @@
+---
+- name: Install ClickHouse
+  hosts: clickhouse
+  become: true
+
+  pre_tasks:
+    - name: Install gnupg for APT key import (Debian only)
+      ansible.builtin.apt:
+        name: gnupg
+        state: present
+        update_cache: true
+      when: ansible_os_family == "Debian"
+
+  roles:
+    - clickhouse
+
+- name: Install Vector
+  hosts: vector
+  become: true
+  roles:
+    - vector-role
+
+- name: Install Lighthouse
+  hosts: lighthouse
+  become: true
+  roles:
+    - lighthouse-role
