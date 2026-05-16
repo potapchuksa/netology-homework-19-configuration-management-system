@@ -7,3 +7,5 @@
 ## [«Использование Ansible»](03-using-ansible/)
 
 ## [«Работа с roles»](04-working-with-roles/)
+
+## [«Тестирование roles»](05-testing-roles/)

@@ -1,5 +1,13 @@
 # Домашнее задание к занятию 5 «Тестирование roles». Потапчук Сергей.
 
+Все действия производились здесь: **[Vector role](https://github.com/potapchuksa/netology-vector-role)**
+
+[v1.1.0](https://github.com/potapchuksa/netology-vector-role/releases/tag/v1.1.0)
+
+[v1.2.0](https://github.com/potapchuksa/netology-vector-role/releases/tag/v1.2.0)
+
+[tox.ini](https://github.com/potapchuksa/netology-vector-role/blob/main/tox.ini)
+
 ## Подготовка к выполнению
 
 1. Установите molecule и его драйвера: `pip3 install "molecule molecule_docker molecule_podman`.
@@ -9,7 +17,7 @@
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip3 install "molecule[docker,podman,lint]" molecule-docker
+pip3 install ansible ansible-lint yamllint molecule molecule-docker molecule-podman
 ```
 
 ![](img/img-01-01.png)
@@ -62,10 +70,36 @@ rules:
     level: warning
   document-start: disable
   comments-indentation: disable
+
+  comments:
+    min-spaces-from-content: 1
+  braces:
+    max-spaces-inside: 1
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true
 ```
 
-4. Добавьте несколько assert в verify.yml-файл для  проверки работоспособности vector-role (проверка, что конфиг валидный, проверка успешности запуска и др.). 
+![](img/img-01-08.png)
+
+4. Добавьте несколько assert в verify.yml-файл для  проверки работоспособности vector-role (проверка, что конфиг валидный, проверка успешности запуска и др.).
+
+Запуск одной командой: molecule test
+
+![](img/img-01-09.png)
+
+![](img/img-01-10.png)
+
+![](img/img-01-11.png)
+
 5. Запустите тестирование роли повторно и проверьте, что оно прошло успешно.
+
+![](img/img-01-12.png)
+
+![](img/img-01-13.png)
+
+![](img/img-01-14.png)
+
 5. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
 
 ### Tox
@@ -76,6 +110,11 @@ rules:
 5. Создайте облегчённый сценарий для `molecule` с драйвером `molecule_podman`. Проверьте его на исполнимость.
 6. Пропишите правильную команду в `tox.ini`, чтобы запускался облегчённый сценарий.
 8. Запустите команду `tox`. Убедитесь, что всё отработало успешно.
+
+![](img/img-01-15.png)
+
+![](img/img-01-16.png)
+
 9. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
 
 После выполнения у вас должно получится два сценария molecule и один tox.ini файл в репозитории. Не забудьте указать в ответе теги решений Tox и Molecule заданий. В качестве решения пришлите ссылку на  ваш репозиторий и скриншоты этапов выполнения задания. 
