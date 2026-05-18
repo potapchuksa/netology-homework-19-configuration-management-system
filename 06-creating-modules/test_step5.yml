@@ -1,0 +1,11 @@
+---
+- name: Step 5 - Test file_creator module
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Create file with custom module
+      file_creator:
+        path: /tmp/netology_hw_step5.txt
+        content: "Single task playbook test"
+        mode: '0644'

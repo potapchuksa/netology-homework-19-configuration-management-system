@@ -1,0 +1,12 @@
+---
+- name: Test role from installed collection
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  collections:
+    - my_own_namespace.yandex_cloud_elk
+  roles:
+    - role: file_creator_role
+      vars:
+        file_creator_path: /tmp/collection_role_test.txt
+        file_creator_content: "Role test content"

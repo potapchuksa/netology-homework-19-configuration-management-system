@@ -9,3 +9,5 @@
 ## [«Работа с roles»](04-working-with-roles/)
 
 ## [«Тестирование roles»](05-testing-roles/)
+
+## [«Создание собственных модулей»](06-creating-modules/)

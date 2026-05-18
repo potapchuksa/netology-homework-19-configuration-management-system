@@ -1,0 +1,13 @@
+---
+- name: Test module from installed collection
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  collections:
+    - my_own_namespace.yandex_cloud_elk
+  tasks:
+    - name: Create file via FQCN
+      file_creator:
+        path: /tmp/collection_module_test.txt
+        content: "Tested from tarball install"
+        mode: '0644'

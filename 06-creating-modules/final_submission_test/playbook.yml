@@ -1,0 +1,11 @@
+---
+- name: Final submission test
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Create file via installed collection
+      my_own_namespace.yandex_cloud_elk.file_creator:
+        path: /tmp/hw6_final_test.txt
+        content: "Netology HW #6 successfully completed!"
+        mode: '0644'
